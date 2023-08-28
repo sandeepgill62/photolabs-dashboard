@@ -1,29 +1,35 @@
 import React, { Component } from "react";
 
 import classnames from "classnames";
-// import Loading from "./Loading";
 import Panel from "./Panel";
+
+import {
+  getTotalPhotos,
+  getTotalTopics,
+  getUserWithMostUploads,
+  getUserWithLeastUploads
+ } from "helpers/selectors";
 
 const data = [
   {
     id: 1,
     label: "Total Photos",
-    value: 10
+    getValue: getTotalPhotos
   },
   {
     id: 2,
     label: "Total Topics",
-    value: 4
+    getValue: getTotalTopics
   },
   {
     id: 3,
     label: "User with the most uploads",
-    value: "Allison Saeng"
+    getValue: getUserWithMostUploads
   },
   {
     id: 4,
     label: "User with the least uploads",
-    value: "Lukas Souza"
+    getValue: getUserWithLeastUploads
   }
 ];
 
@@ -59,7 +65,7 @@ class Dashboard extends Component {
 
     Promise.all(urlsPromise)
     .then(([photos, topics]) => {
-      console.log(photos, topics);
+      // console.log(photos, topics);
       this.setState({
         loading: false,
         photos: photos,
@@ -74,12 +80,10 @@ class Dashboard extends Component {
     }
   }
 
-
   render() {
-
-    if(!this.state.loading) {
-      console.log(this.state);
-    }
+    // if(!this.state.loading) {
+    //   console.log(this.state);
+    // }
 
     const dashboardClasses = classnames("dashboard", {
       "dashboard--focused": this.state.focused
@@ -88,11 +92,11 @@ class Dashboard extends Component {
     const panels = (this.state.focused ? data.filter(panel => this.state.focused === panel.id) : data)
     .map(panel => (
       <Panel
-        key={panel.id}
         id={panel.id}
+        key={panel.id}
         label={panel.label}
-        value={panel.value}
-        onSelect={event => this.selectPanel(panel.id)}
+        value={panel.getValue(this.state)}
+        onSelect={() => this.selectPanel(panel.id)}
       />
     ));
 

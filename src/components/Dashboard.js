@@ -30,9 +30,11 @@ const data = [
 class Dashboard extends Component {
 
   state = {
-    loading: false,
-    focused: null
-  };
+    loading: true,
+    focused: null,
+    photos: [],
+    topics: []
+   };
 
   selectPanel(id) {
     this.setState(previousState => ({
@@ -46,6 +48,24 @@ class Dashboard extends Component {
     if (focused) {
       this.setState({ focused });
     }
+
+    const urlsPromise = [
+      "/api/photos",
+      "/api/topics",
+    ].map(url => fetch(url)
+      .then(response => {
+          return response.json()
+      }));
+
+    Promise.all(urlsPromise)
+    .then(([photos, topics]) => {
+      console.log(photos, topics);
+      this.setState({
+        loading: false,
+        photos: photos,
+        topics: topics
+      });
+    });
   }
 
   componentDidUpdate(previousProps, previousState) {
@@ -56,6 +76,11 @@ class Dashboard extends Component {
 
 
   render() {
+
+    if(!this.state.loading) {
+      console.log(this.state);
+    }
+
     const dashboardClasses = classnames("dashboard", {
       "dashboard--focused": this.state.focused
     });

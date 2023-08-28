@@ -65,7 +65,6 @@ class Dashboard extends Component {
 
     Promise.all(urlsPromise)
     .then(([photos, topics]) => {
-      // console.log(photos, topics);
       this.setState({
         loading: false,
         photos: photos,
@@ -81,10 +80,6 @@ class Dashboard extends Component {
   }
 
   render() {
-    // if(!this.state.loading) {
-    //   console.log(this.state);
-    // }
-
     const dashboardClasses = classnames("dashboard", {
       "dashboard--focused": this.state.focused
     });
